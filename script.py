@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
-from scipy.stats import ttest_1samp
+from scipy import stats
+
 
 
 heart = pd.read_csv('heart_disease.csv')
@@ -16,7 +17,7 @@ mean_chol_hd = np.mean(chol_hd)
 print(mean_chol_hd)
 # null hypothesis: People with hd have an avg chol = 240
 # alt hypothesis: People with hd have avg chol > 240
-tstat, pvalue = ttest_1samp(chol_hd, 240, alternative='greater')
+tstat, pvalue = stats.ttest_1samp(chol_hd, 240, alternative='greater')
 # p-value of .00354 - reject null hypothesis
 print(tstat, pvalue)
 
@@ -25,5 +26,19 @@ print(tstat, pvalue)
 # alt hyp: avg chol > 240
 chol_no_hd = no_hd.chol
 # pvalue = .26, do not reject null hypothesis
-tstat, pvalue = ttest_1samp(chol_no_hd, 240, alternative='greater')
+tstat, pvalue = stats.ttest_1samp(chol_no_hd, 240, alternative='greater')
 print(tstat, pvalue)
+
+# total number of patients
+num_patients = len(heart)
+# print(num_patients)
+
+# # of patients with fasting blood sugar (fbs) greater than 120 (reported as binary)
+num_highfbs_patients = np.sum(heart.fbs)
+print(num_highfbs_patients)
+
+print(num_patients*0.08)
+
+# pvalue .0000469, reject Ho 
+pval = stats.binom_test(num_highfbs_patients, num_patients, 0.08, alternative='greater')
+print(pval)
